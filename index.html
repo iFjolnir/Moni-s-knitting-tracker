@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Row Wheel</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app">
+
+    <!-- SETUP SCREEN -->
+    <section id="setup-screen" class="screen active">
+      <h1>Set up pattern</h1>
+
+      <label>
+        Cycle length
+        <input type="number" id="cycle-length" min="2" placeholder="e.g. 6" />
+      </label>
+
+      <fieldset>
+        <legend>Special row</legend>
+        <label>
+          <input type="radio" name="special" value="add" checked />
+          Addition
+        </label>
+        <label>
+          <input type="radio" name="special" value="reduce" />
+          Reduction
+        </label>
+      </fieldset>
+
+      <button id="start-btn">Start</button>
+    </section>
+
+    <!-- WHEEL SCREEN -->
+    <section id="wheel-screen" class="screen">
+      <div id="done-stack" class="stack"></div>
+
+      <div id="center-area">
+        <p id="status-text">NO ROW ACTIVE</p>
+      </div>
+
+      <div id="future-stack" class="stack"></div>
+    </section>
+
+  </main>
+
+  <!-- JS -->
+  <script src="script.js"></script>
+</body>
+</html>

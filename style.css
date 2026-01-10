@@ -1,0 +1,130 @@
+/* ---------- CSS RESET (minimal) ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ---------- THEME VARIABLES ---------- */
+:root {
+  --bg: #f7f7f5;
+  --text: #2b2b2b;
+  --card: #c9d6c0;
+  --card-active: #8ea37c;
+  --card-done: #b8c6af;
+  --muted: #8a8a8a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121412;
+    --text: #f0f0ec;
+    --card: #3a4434;
+    --card-active: #6f8a5a;
+    --card-done: #2c3328;
+    --muted: #9aa19a;
+  }
+}
+
+/* ---------- LAYOUT ---------- */
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+}
+
+#app {
+  min-height: 100dvh;
+  padding: env(safe-area-inset-top)
+           env(safe-area-inset-right)
+           env(safe-area-inset-bottom)
+           env(safe-area-inset-left);
+}
+
+/* ---------- SCREENS ---------- */
+.screen {
+  display: none;
+  min-height: 100dvh;
+  padding: 1.5rem;
+}
+
+.screen.active {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ---------- SETUP ---------- */
+#setup-screen h1 {
+  margin: 0;
+}
+
+label,
+fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+input[type="number"] {
+  font-size: 1.2rem;
+  padding: 0.5rem;
+}
+
+button {
+  margin-top: auto;
+  padding: 0.9rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 0.75rem;
+  background: var(--card-active);
+  color: var(--text);
+}
+
+/* ---------- WHEEL ---------- */
+#wheel-screen {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+#center-area {
+  text-align: center;
+}
+
+#status-text {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* ---------- TILE ---------- */
+.tile {
+  width: min(80vw, 320px);
+  aspect-ratio: 3 / 2;
+  background: var(--card);
+  border-radius: 1rem;
+  display: grid;
+  place-items: center;
+  font-size: clamp(2rem, 8vw, 3rem);
+  font-weight: 700;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.tile.active {
+  background: var(--card-active);
+}
+
+.tile.done {
+  background: var(--card-done);
+  opacity: 0.85;
+}
