@@ -1,135 +1,257 @@
+
+// ====================
 const STORAGE_KEY = "row-wheel-state";
+// STATE
 
+// ====================
 const setupScreen = document.getElementById("setup-screen");
-const wheelScreen = document.getElementById("wheel-screen");
-const cycleInput = document.getElementById("cycle-length");
-const startBtn = document.getElementById("start-btn");
-const resetBtn = document.getElementById("reset-btn");
-const wheelTrack = document.getElementById("wheel-track");
-const statusText = document.getElementById("status-text");
-
-const VISIBLE_OFFSETS = [-2, -1, 0, 1, 2];
-const OFFSET_POSITIONS = {
-  "-2": { y: -220, scale: 0.72 },
-  "-1": { y: -120, scale: 0.82 },
-  "0": { y: 0, scale: 1.05 },
-  "1": { y: 150, scale: 0.88 },
-  "2": { y: 260, scale: 0.78 }
-};
-
 let state = {
-  length: 0,
-  specialType: "add",
-  position: 0,
-  active: false
+const wheelScreen = document.getElementById("wheel-screen");
+  tiles: [],        // ordered wheel
+const cycleInput = document.getElementById("cycle-length");
+  active: false     // whether the first tile is active
+const startBtn = document.getElementById("start-btn");
 };
+const resetBtn = document.getElementById("reset-btn");
 
+const wheelTrack = document.getElementById("wheel-track");
+// ====================
+const statusText = document.getElementById("status-text");
+// ELEMENTS
+
+// ====================
+const VISIBLE_OFFSETS = [-2, -1, 0, 1, 2, 3, 4, 5];
+const setupScreen = document.getElementById("setup-screen");
+const OFFSET_POSITIONS = {
+const wheelScreen = document.getElementById("wheel-screen");
+  "-2": { y: -320, scale: 0.64 },
+
+  "-1": { y: -210, scale: 0.74 },
+const cycleInput = document.getElementById("cycle-length");
+  "0": { y: 0, scale: 1.08 },
+const startBtn = document.getElementById("start-btn");
+  "1": { y: 210, scale: 0.78 },
+
+  "2": { y: 330, scale: 0.72 },
+const doneStack = document.getElementById("done-stack");
+  "3": { y: 440, scale: 0.68 },
+const futureStack = document.getElementById("future-stack");
+  "4": { y: 540, scale: 0.64 },
+const statusText = document.getElementById("status-text");
+  "5": { y: 640, scale: 0.6 }
+
+};
+// ====================
+
+// INIT
+let state = {
+// ====================
+  length: 0,
+startBtn.addEventListener("click", () => {
+  specialType: "add",
+  const length = parseInt(cycleInput.value, 10);
+  position: 0,
+  if (!length || length < 2) return;
+  active: false
+
+};
+  // build the wheel
+
+  state.tiles = [];
+function safeModulo(value, modulo) {
+  for (let i = 0; i < length; i++) {
+  return ((value % modulo) + modulo) % modulo;
+    state.tiles.push({
+}
+      label: i === 0 ? "+" : String(i)
+
+    });
 function buildTiles(length, specialType) {
+  }
   const specialLabel = specialType === "reduce" ? "−" : "+";
-  return Array.from({ length }, (_, index) => ({
-    label: index === 0 ? specialLabel : String(index)
-  }));
-}
 
-function showSetup() {
-  setupScreen.classList.add("active");
-  wheelScreen.classList.remove("active");
+  return Array.from({ length }, (_, index) => ({
+  state.active = false;
+    label: index === 0 ? specialLabel : String(index)
+  saveState();
+  }));
+  showWheel();
 }
+  renderWheel();
+
+});
+function showSetup() {
+
+  setupScreen.classList.add("active");
+// ====================
+  wheelScreen.classList.remove("active");
+// SCREEN SWITCH
+}
+// ====================
 
 function showWheel() {
+function showWheel() {
+  setupScreen.classList.remove("active");
   setupScreen.classList.remove("active");
   wheelScreen.classList.add("active");
+  wheelScreen.classList.add("active");
+}
 }
 
+
+// ====================
 function saveState() {
+// RENDER
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+// ====================
 }
-
-function loadState() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (!saved) {
-    showSetup();
-    return;
-  }
-
-  state = JSON.parse(saved);
-  showWheel();
-  renderWheel();
-}
-
-function orderedTiles() {
-  const tiles = buildTiles(state.length, state.specialType);
-  return tiles.map((_, index) => tiles[(state.position + index) % state.length]);
-}
-
-function renderTile(tileData, options = {}) {
-  const tile = document.createElement("div");
-  tile.classList.add("tile");
-  tile.textContent = tileData.label;
-
-  if (options.stateClass) {
-    tile.classList.add(options.stateClass);
-  }
-
-  if (options.isClickable) {
-    tile.classList.add("tile--clickable");
-    tile.setAttribute("role", "button");
-    tile.setAttribute("tabindex", "0");
-    tile.addEventListener("click", options.onClick);
-    tile.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        options.onClick();
-      }
-    });
-  } else if (options.isDimmed !== false) {
-    tile.classList.add("tile--inactive");
-  }
-
-  return tile;
-}
-
-function applyTileTransform(tile, offset) {
-  const settings = OFFSET_POSITIONS[offset];
-  if (!settings) return;
-
-  tile.style.setProperty(
-    "--tile-transform",
-    `translate(-50%, -50%) translateY(${settings.y}px) scale(${settings.scale})`
-  );
-  tile.style.zIndex = String(10 - Math.abs(offset));
-}
-
 function renderWheel() {
+
+  doneStack.innerHTML = "";
+function loadState() {
+  futureStack.innerHTML = "";
+  const saved = localStorage.getItem(STORAGE_KEY);
+
+  if (!saved) {
+  if (!state.active) {
+    showSetup();
+    statusText.textContent = "NO ROW ACTIVE";
+    return;
+  } else {
+  }
+    statusText.textContent = "";
+
+  }
+  state = JSON.parse(saved);
+
+  showWheel();
+  state.tiles.forEach((tileData, index) => {
+  renderWheel();
+    const tile = document.createElement("div");
+}
+    tile.classList.add("tile");
+
+    tile.textContent = tileData.label;
+function orderedTiles() {
+
+  const tiles = buildTiles(state.length, state.specialType);
+    // FIRST TILE = current position in the wheel
+  return tiles.map((_, index) => tiles[(state.position + index) % state.length]);
+    if (index === 0 && state.active) {
+}
+      tile.classList.add("active");
+
+      tile.addEventListener("click", finishRow);
+function renderTile(tileData, options = {}) {
+      doneStack.appendChild(tile);
+  const tile = document.createElement("div");
+    } 
+  tile.classList.add("tile");
+    else if (index === 0 && !state.active) {
+  tile.textContent = tileData.label;
+      tile.addEventListener("click", startRow);
+
+      futureStack.appendChild(tile);
+  if (options.stateClass) {
+    } 
+    tile.classList.add(options.stateClass);
+    else {
+  }
+      futureStack.appendChild(tile);
+
+    }
+  if (options.isClickable) {
+  });
+    tile.classList.add("tile--clickable");
+}
+    tile.setAttribute("role", "button");
+
+    tile.setAttribute("tabindex", "0");
+// ====================
+    tile.addEventListener("click", options.onClick);
+// ACTIONS
+    tile.addEventListener("keydown", (event) => {
+// ====================
+      if (event.key === "Enter" || event.key === " ") {
+function startRow() {
+        event.preventDefault();
+  state.active = true;
+        options.onClick();
+  saveState();
+      }
+  renderWheel();
+    });
+}
+  } else if (options.isDimmed !== false) {
+
+    tile.classList.add("tile--inactive");
+function finishRow() {
+  }
+  const finished = state.tiles.shift(); // remove first tile
+
+  state.tiles.push(finished);           // send it to the end
+  return tile;
+  state.active = false;                 // pause
+}
+  saveState();
+
+  renderWheel();
+function applyTileTransform(tile, offset) {
+}
+  const settings = OFFSET_POSITIONS[offset];
+
+  if (!settings) return;
+// ====================
+
+// STORAGE
+  tile.style.setProperty(
+// ====================
+    "--tile-transform",
+function saveState() {
+    `translate(-50%, -50%) translateY(${settings.y}px) scale(${settings.scale})`
+  localStorage.setItem("row-wheel-state", JSON.stringify(state));
+  );
+}
+  tile.style.zIndex = String(10 - Math.abs(offset));
+
+}
+function loadState() {
+
+  const saved = localStorage.getItem("row-wheel-state");
+function renderWheel() {
+  if (!saved) return;
   wheelTrack.innerHTML = "";
 
-  // Base cycle (not rotated)
-  const cycle = buildTiles(state.length, state.specialType);
 
-  // 'position' is the last completed tile index.
-  // The next row to start is always one step after it.
-  const nextIndex = (state.position + 1) % state.length;
+  state = JSON.parse(saved);
+  const tiles = orderedTiles();
+  showWheel();
 
+  renderWheel();
   statusText.style.display = state.active ? "none" : "block";
+}
   statusText.textContent = "NO ROW ACTIVE";
 
+
+loadState();
   VISIBLE_OFFSETS.forEach((offset) => {
-    // In pause state, we hide the center tile and show the text instead
-    if (!state.active && offset === 0) return;
+    if (!state.active && offset === 0) {
+      return;
+    }
 
-    // Anchor everything around nextIndex (the tile we will start next).
-    // When paused, offsets > 0 should not skip a missing center tile,
-    // so we shift them by -1.
-    const effectiveOffset =
-      !state.active && offset > 0 ? offset - 1 : offset;
-
-    const tileIdx =
-      (nextIndex + effectiveOffset + state.length) % state.length;
-
-    const tileData = cycle[tileIdx];
-
-    const isActive = offset === 0 && state.active;      // center tile (only when active)
-    const isNext = offset === 1 && !state.active;       // first future tile when paused
+    let tileIndex = 0;
+    if (offset < 0) {
+      tileIndex = safeModulo(offset, state.length);
+    } else {
+      let relativeOffset = offset;
+      if (!state.active) {
+        relativeOffset -= 1;
+      }
+      tileIndex = safeModulo(relativeOffset, state.length);
+    }
+    const tileData = tiles[tileIndex];
+    const isActive = offset === 0 && state.active;
+    const isNext = offset === 1 && !state.active;
 
     const tile = renderTile(tileData, {
       stateClass: isActive ? "tile--active" : "",
@@ -138,7 +260,6 @@ function renderWheel() {
       isDimmed: !isActive && !isNext
     });
 
-    // Done tiles are always the ones above the center / divider
     if (offset < 0) {
       tile.classList.add("tile--done");
     }
@@ -147,7 +268,6 @@ function renderWheel() {
     wheelTrack.appendChild(tile);
   });
 }
-
 
 function startRow() {
   state.active = true;
