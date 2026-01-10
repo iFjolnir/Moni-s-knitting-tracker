@@ -41,13 +41,12 @@
         <button id="reset-btn" type="button">New setup</button>
       </header>
 
-      <div id="done-stack" class="stack stack--done"></div>
-
-      <div id="active-slot" class="active-slot">
-        <p id="status-text">NO ROW ACTIVE</p>
+      <div class="wheel-viewport" aria-live="polite">
+        <div id="wheel-track" class="wheel-track"></div>
+        <div id="wheel-status" class="wheel-status">
+          <p id="status-text">NO ROW ACTIVE</p>
+        </div>
       </div>
-
-      <div id="future-stack" class="stack stack--future"></div>
     </section>
   </main>
 
