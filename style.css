@@ -119,27 +119,26 @@ button:active {
   font-size: 0.95rem;
 }
 
-.stack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  gap: 0;
-}
-
-.stack .tile {
-  margin-top: -1.4rem;
-}
-
-.stack .tile:first-child {
-  margin-top: 0;
-}
-
-.active-slot {
-  min-height: 240px;
+.wheel-viewport {
+  position: relative;
+  width: min(92vw, 420px);
+  height: min(70vh, 720px);
+  overflow: hidden;
   display: grid;
   place-items: center;
-  width: 100%;
+}
+
+.wheel-track {
+  position: absolute;
+  inset: 0;
+}
+
+.wheel-status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
 }
 
 #status-text {
@@ -152,8 +151,12 @@ button:active {
 
 /* ---------- TILE ---------- */
 .tile {
+  position: absolute;
+  left: 50%;
+  top: 50%;
   width: min(85vw, 340px);
   aspect-ratio: 3.2 / 2;
+  transform: var(--tile-transform, translate(-50%, -50%));
   background: var(--card);
   border-radius: 1.25rem;
   display: grid;
@@ -162,21 +165,20 @@ button:active {
   font-weight: 700;
   color: #eff3e8;
   box-shadow: var(--shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease;
 }
 
 .tile--active {
   background: var(--card-active);
-  transform: scale(1.03);
+  z-index: 4;
 }
 
 .tile--done {
   background: var(--card-done);
-  opacity: 0.9;
 }
 
 .tile--inactive {
-  opacity: 0.55;
+  background: #d2dcc8;
   pointer-events: none;
 }
 
@@ -185,7 +187,7 @@ button:active {
 }
 
 .tile--clickable:hover {
-  transform: translateY(-2px);
+  box-shadow: 0 22px 36px rgba(39, 43, 32, 0.2);
 }
 
 @media (min-width: 720px) {
