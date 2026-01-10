@@ -103,21 +103,33 @@ function applyTileTransform(tile, offset) {
 function renderWheel() {
   wheelTrack.innerHTML = "";
 
-  const tiles = orderedTiles();
-  const baseOffset = state.active ? 0 : -1;
+  // Base cycle (not rotated)
+  const cycle = buildTiles(state.length, state.specialType);
+
+  // 'position' is the last completed tile index.
+  // The next row to start is always one step after it.
+  const nextIndex = (state.position + 1) % state.length;
 
   statusText.style.display = state.active ? "none" : "block";
   statusText.textContent = "NO ROW ACTIVE";
 
   VISIBLE_OFFSETS.forEach((offset) => {
-    if (!state.active && offset === 0) {
-      return;
-    }
+    // In pause state, we hide the center tile and show the text instead
+    if (!state.active && offset === 0) return;
 
-    const tileIndex = (baseOffset + offset + state.length) % state.length;
-    const tileData = tiles[tileIndex];
-    const isActive = offset === 0 && state.active;
-    const isNext = offset === 1 && !state.active;
+    // Anchor everything around nextIndex (the tile we will start next).
+    // When paused, offsets > 0 should not skip a missing center tile,
+    // so we shift them by -1.
+    const effectiveOffset =
+      !state.active && offset > 0 ? offset - 1 : offset;
+
+    const tileIdx =
+      (nextIndex + effectiveOffset + state.length) % state.length;
+
+    const tileData = cycle[tileIdx];
+
+    const isActive = offset === 0 && state.active;      // center tile (only when active)
+    const isNext = offset === 1 && !state.active;       // first future tile when paused
 
     const tile = renderTile(tileData, {
       stateClass: isActive ? "tile--active" : "",
@@ -126,7 +138,8 @@ function renderWheel() {
       isDimmed: !isActive && !isNext
     });
 
-    if (offset + baseOffset < 0) {
+    // Done tiles are always the ones above the center / divider
+    if (offset < 0) {
       tile.classList.add("tile--done");
     }
 
@@ -134,6 +147,7 @@ function renderWheel() {
     wheelTrack.appendChild(tile);
   });
 }
+
 
 function startRow() {
   state.active = true;
