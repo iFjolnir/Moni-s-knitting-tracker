@@ -24,6 +24,10 @@ let state = {
   active: false
 };
 
+function safeModulo(value, modulo) {
+  return ((value % modulo) + modulo) % modulo;
+}
+
 function buildTiles(length, specialType) {
   const specialLabel = specialType === "reduce" ? "−" : "+";
   return Array.from({ length }, (_, index) => ({
@@ -104,7 +108,6 @@ function renderWheel() {
   wheelTrack.innerHTML = "";
 
   const tiles = orderedTiles();
-  const baseOffset = state.active ? 0 : -1;
 
   statusText.style.display = state.active ? "none" : "block";
   statusText.textContent = "NO ROW ACTIVE";
@@ -114,7 +117,16 @@ function renderWheel() {
       return;
     }
 
-    const tileIndex = (baseOffset + offset + state.length) % state.length;
+    let tileIndex = 0;
+    if (offset < 0) {
+      tileIndex = safeModulo(offset, state.length);
+    } else {
+      let relativeOffset = offset;
+      if (!state.active) {
+        relativeOffset -= 1;
+      }
+      tileIndex = safeModulo(relativeOffset, state.length);
+    }
     const tileData = tiles[tileIndex];
     const isActive = offset === 0 && state.active;
     const isNext = offset === 1 && !state.active;
@@ -126,7 +138,7 @@ function renderWheel() {
       isDimmed: !isActive && !isNext
     });
 
-    if (offset + baseOffset < 0) {
+    if (offset < 0) {
       tile.classList.add("tile--done");
     }
 
