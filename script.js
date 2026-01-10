@@ -5,10 +5,17 @@ const wheelScreen = document.getElementById("wheel-screen");
 const cycleInput = document.getElementById("cycle-length");
 const startBtn = document.getElementById("start-btn");
 const resetBtn = document.getElementById("reset-btn");
-const doneStack = document.getElementById("done-stack");
-const futureStack = document.getElementById("future-stack");
-const activeSlot = document.getElementById("active-slot");
+const wheelTrack = document.getElementById("wheel-track");
 const statusText = document.getElementById("status-text");
+
+const VISIBLE_OFFSETS = [-2, -1, 0, 1, 2];
+const OFFSET_POSITIONS = {
+  "-2": { y: -220, scale: 0.72 },
+  "-1": { y: -120, scale: 0.82 },
+  "0": { y: 0, scale: 1.05 },
+  "1": { y: 150, scale: 0.88 },
+  "2": { y: 260, scale: 0.78 }
+};
 
 let state = {
   length: 0,
@@ -82,50 +89,49 @@ function renderTile(tileData, options = {}) {
   return tile;
 }
 
+function applyTileTransform(tile, offset) {
+  const settings = OFFSET_POSITIONS[offset];
+  if (!settings) return;
+
+  tile.style.setProperty(
+    "--tile-transform",
+    `translate(-50%, -50%) translateY(${settings.y}px) scale(${settings.scale})`
+  );
+  tile.style.zIndex = String(10 - Math.abs(offset));
+}
+
 function renderWheel() {
-  doneStack.innerHTML = "";
-  futureStack.innerHTML = "";
-  activeSlot.querySelectorAll(".tile").forEach((tile) => tile.remove());
+  wheelTrack.innerHTML = "";
 
   const tiles = orderedTiles();
-  const doneCount = state.position;
-  const futureCount = state.length - 1 - doneCount;
-  const futureTiles = tiles.slice(1, 1 + futureCount);
-  const doneTiles = tiles.slice(1 + futureCount).reverse();
+  const baseOffset = state.active ? 0 : -1;
 
   statusText.style.display = state.active ? "none" : "block";
   statusText.textContent = "NO ROW ACTIVE";
 
-  if (state.active) {
-    const activeTile = renderTile(tiles[0], {
-      stateClass: "tile--active",
-      isClickable: true,
-      onClick: finishRow
-    });
-    activeSlot.appendChild(activeTile);
-  } else {
-    const nextTile = renderTile(tiles[0], {
-      stateClass: "tile--active",
-      isClickable: true,
-      onClick: startRow
-    });
-    futureStack.appendChild(nextTile);
-  }
+  VISIBLE_OFFSETS.forEach((offset) => {
+    if (!state.active && offset === 0) {
+      return;
+    }
 
-  doneTiles.forEach((tileData) => {
-    const tile = renderTile(tileData, {
-      stateClass: "tile--done",
-      isClickable: false,
-      isDimmed: false
-    });
-    doneStack.appendChild(tile);
-  });
+    const tileIndex = (baseOffset + offset + state.length) % state.length;
+    const tileData = tiles[tileIndex];
+    const isActive = offset === 0 && state.active;
+    const isNext = offset === 1 && !state.active;
 
-  futureTiles.forEach((tileData) => {
     const tile = renderTile(tileData, {
-      isClickable: false
+      stateClass: isActive ? "tile--active" : "",
+      isClickable: isActive || isNext,
+      onClick: isActive ? finishRow : isNext ? startRow : null,
+      isDimmed: !isActive && !isNext
     });
-    futureStack.appendChild(tile);
+
+    if (offset + baseOffset < 0) {
+      tile.classList.add("tile--done");
+    }
+
+    applyTileTransform(tile, offset);
+    wheelTrack.appendChild(tile);
   });
 }
 
