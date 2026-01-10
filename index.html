@@ -5,50 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Row Wheel</title>
 
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main id="app">
-
-    <!-- SETUP SCREEN -->
     <section id="setup-screen" class="screen active">
-      <h1>Set up pattern</h1>
+      <div class="setup-header">
+        <h1>Set up your row wheel</h1>
+        <p>Choose the cycle length and special row type, then start tracking.</p>
+      </div>
 
-      <label>
+      <label class="field">
         Cycle length
         <input type="number" id="cycle-length" min="2" placeholder="e.g. 6" />
       </label>
 
-      <fieldset>
+      <fieldset class="field">
         <legend>Special row</legend>
-        <label>
+        <label class="radio">
           <input type="radio" name="special" value="add" checked />
-          Addition
+          Addition (+)
         </label>
-        <label>
+        <label class="radio">
           <input type="radio" name="special" value="reduce" />
-          Reduction
+          Reduction (−)
         </label>
       </fieldset>
 
-      <button id="start-btn">Start</button>
+      <button id="start-btn" type="button">Start wheel</button>
     </section>
 
-    <!-- WHEEL SCREEN -->
     <section id="wheel-screen" class="screen">
-      <div id="done-stack" class="stack"></div>
+      <header class="wheel-header">
+        <h2>Row wheel</h2>
+        <button id="reset-btn" type="button">New setup</button>
+      </header>
 
-      <div id="center-area">
+      <div id="done-stack" class="stack stack--done"></div>
+
+      <div id="active-slot" class="active-slot">
         <p id="status-text">NO ROW ACTIVE</p>
       </div>
 
-      <div id="future-stack" class="stack"></div>
+      <div id="future-stack" class="stack stack--future"></div>
     </section>
-
   </main>
 
-  <!-- JS -->
   <script src="script.js"></script>
 </body>
 </html>
