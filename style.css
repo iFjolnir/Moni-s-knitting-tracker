@@ -98,9 +98,7 @@ button:active {
 /* ---------- WHEEL ---------- */
 #wheel-screen {
   align-items: center;
-  gap: 0;
-  padding: 0;
-  position: relative;
+  gap: 1.75rem;
 }
 
 .wheel-header {
@@ -108,12 +106,6 @@ button:active {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 1.25rem 1.5rem;
-  z-index: 5;
-  pointer-events: none;
 }
 
 .wheel-header h2 {
@@ -125,20 +117,21 @@ button:active {
   margin: 0;
   background: #444c3c;
   font-size: 0.95rem;
-  pointer-events: auto;
 }
 
 .wheel-viewport {
   position: relative;
-  width: 100vw;
-  height: 100dvh;
+  height: 100svh;
+  width: 100%;
   overflow: hidden;
-  display: grid;
-  place-items: center;
+
+  /* remove centering */
 }
+
 
 .wheel-track {
   position: absolute;
+  transform: translateY(-8vh);
   inset: 0;
 }
 
@@ -150,8 +143,22 @@ button:active {
   pointer-events: none;
 }
 
+.wheel-header {
+  position: fixed;
+  top: env(safe-area-inset-top, 0);
+  left: 0;
+  right: 0;
+  padding: 1rem 1.5rem;
+  z-index: 10;
+  pointer-events: none;
+}
+
+#wheel-screen #reset-btn {
+  pointer-events: auto;
+}
+
 #status-text {
-  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  font-size: 1.8rem;
   font-weight: 700;
   color: #7a8a6d;
   text-align: center;
@@ -163,8 +170,8 @@ button:active {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(82vw, 360px);
-  aspect-ratio: 3.4 / 2;
+  width: min(85vw, 340px);
+  aspect-ratio: 3.2 / 2;
   transform: var(--tile-transform, translate(-50%, -50%));
   background: var(--card);
   border-radius: 1.25rem;
