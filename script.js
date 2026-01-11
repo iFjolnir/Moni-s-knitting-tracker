@@ -8,14 +8,19 @@ const resetBtn = document.getElementById("reset-btn");
 const wheelTrack = document.getElementById("wheel-track");
 const statusText = document.getElementById("status-text");
 
-const VISIBLE_OFFSETS = [-2, -1, 0, 1, 2];
+const VISIBLE_OFFSETS = [-2, -1, 0, 1, 2, 3, 4, 5];
 const OFFSET_POSITIONS = {
-  "-2": { y: -220, scale: 0.72 },
-  "-1": { y: -120, scale: 0.82 },
-  "0": { y: 0, scale: 1.05 },
-  "1": { y: 150, scale: 0.88 },
-  "2": { y: 260, scale: 0.78 }
+  "-2": { y: -240, scale: 0.72 },
+  "-1": { y: -130, scale: 0.82 },
+  "0":  { y: 0,    scale: 1.08 },
+
+  "1":  { y: 150, scale: 0.90 },
+  "2":  { y: 260, scale: 0.80 },
+  "3":  { y: 360, scale: 0.72 },
+  "4":  { y: 450, scale: 0.66 },
+  "5":  { y: 530, scale: 0.60 }
 };
+
 
 let state = {
   length: 0,
